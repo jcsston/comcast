@@ -8,6 +8,7 @@ import os
 import re
 import requests
 import time
+import html
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -22,7 +23,7 @@ logger.debug("Finding form inputs for login...")
 res = session.get('https://customer.xfinity.com/oauth/force_connect/?continue=%23%2Fdevices')
 #res = session.get('https://login.comcast.net/login?r=comcast.net&s=oauth&continue=https%3A%2F%2Flogin.comcast.net%2Foauth%2Fauthorize%3Fclient_id%3Dmy-account-web%26redirect_uri%3Dhttps%253A%252F%252Fcustomer.xfinity.com%252Foauth%252Fcallback%26response_type%3Dcode%26state%3D%2523%252Fdevices%26response%3D1&client_id=my-account-web')
 assert res.status_code == 200
-data = {x[0]: HTMLParser().unescape(x[1]) for x in re.finditer(r'<input.*?name="(.*?)".*?value="(.*?)".*?>', res.text)}
+data = {x[1]: html.unescape(x[2]) for x in re.finditer(r'<input.*?name="(.*?)".*?value="(.*?)".*?>', res.text)}
 logger.debug("Found with the following input fields: {}".format(data))
 data = {
     'user': username,
