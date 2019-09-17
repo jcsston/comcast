@@ -33,6 +33,15 @@ data = {
 
 logger.debug("Posting to login...")
 res = session.post('https://login.xfinity.com/login', data=data)
+# clone of logic from https://github.com/BrendanGrant/ComcastUsageChecker/blob/master/ComcastUsageChecker/Program.cs#L94 Dont_Follow_Redirects_And_Craft_Broken_Url_To_Get_Usage() method
+# turns out not to be needed? to enable this also add , allow_redirects=True to the above request
+# if res.status_code == 302:
+#     # For reasons unknown, the server replies with an incomplete URL, but what is needed is easy enough to detect and add... though ugly.
+#     locationUrl = str(res.headers['Location'])
+#     if (locationUrl.find("client_id") == -1):
+#         newQuery = "client_id=my-account-web&prompt=login&redirect_uri=https%3A%2F%2Fcustomer.xfinity.com%2Foauth%2Fcallback&response_type=code&state=%23%2Fdevices&response=1"
+#         newUri = locationUrl + "?" + newQuery
+#         res = session.get(newUri)
 assert res.status_code == 200
 
 logger.debug("Fetching internet usage AJAX...")
